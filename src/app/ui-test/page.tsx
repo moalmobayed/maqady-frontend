@@ -28,7 +28,7 @@ export default function UiTestPage() {
   const dismissToast = useCallback(() => setToastMessage(null), []);
 
   return (
-    <main className="mx-auto w-full max-w-5xl space-y-10 px-5 py-12 sm:px-8">
+    <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-5 py-12 pt-28 sm:px-8">
       <header className="space-y-3">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
           Maqady UI

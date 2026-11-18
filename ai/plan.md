@@ -88,9 +88,32 @@ movie-reservation/
 │   ├── lib/              # Utilities and provider adapters once decided
 │   ├── types/
 │   └── data/              # Initial mock data
-├── spec.md
-├── plan.md
-├── task.md
+├── ai/
+│   ├── spec.md
+│   ├── plan.md
+│   ├── task.md
+│   ├── index.md             # Page-specification index
+│   ├── home/
+│   ├── movies/
+│   ├── theaters/
+│   ├── theater-details/
+│   ├── seat-selection/
+│   ├── booking-summary/
+│   ├── checkout/
+│   ├── booking-confirmation/
+│   ├── login/
+│   ├── register/
+│   ├── my-bookings/
+│   ├── booking-details/
+│   ├── profile/
+│   ├── admin-overview/
+│   ├── admin-theaters/
+│   ├── admin-movies/
+│   ├── admin-people/
+│   ├── admin-showtimes/
+│   ├── admin-bookings/
+│   ├── admin-payments/
+│   └── admin-customers/
 └── package.json
 ```
 
@@ -168,7 +191,7 @@ requirements.
 - Review the open questions in `spec.md`.
 - Create the Next.js app with TypeScript, ESLint, Tailwind, App
   Router, and `src/`.
-- Place `spec.md`, `plan.md`, and `task.md` at the project root.
+- Keep `spec.md`, `plan.md`, and `task.md` in the `ai/` directory.
 - Establish FOYER theme tokens from the UI Design System page.
 - Create core types, mock data, service interfaces, and shared UI
   states.
@@ -181,8 +204,12 @@ and there are no startup errors.
 - Build customer navigation/footer, MovieCard, MovieGrid, SearchBar,
   filters, pagination, and state components.
 - Implement Home.
-- Implement Movies Listing/Search/Filters.
-- Implement Movie Details with optional content sections.
+- Implement Movies Listing/Search/Filters according to the
+  [Movies Listing plan](./movies/plan.md#movies-listing-plan) and
+  [FR-02](./spec.md).
+- Implement Movie Details according to the
+  [Movie Details plan](./movie-details/plan.md) and
+  [FR-03](./spec.md).
 
 **Exit criteria:** Users can navigate from Home to listing to movie
 details; search/filters and core states work with mock data.

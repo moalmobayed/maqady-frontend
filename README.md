@@ -16,6 +16,21 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Home page data
+
+The Home page loads public content from
+`https://maqady-backend.vercel.app/api/v1/home` by default. To use a
+different backend, set `MAQADY_API_BASE_URL` in `.env.local` to the API
+base ending in `/api/v1`, then restart the dev server. For example:
+
+```env
+MAQADY_API_BASE_URL=https://your-backend.example/api/v1
+```
+
+The Home page fetches the live backend response and shows a recoverable
+error with a retry action if the service is unavailable or returns
+unexpected data.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

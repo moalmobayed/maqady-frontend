@@ -49,45 +49,211 @@ each admin capability must be confirmed.
 
 ### FR-01 --- Home (`/`)
 
-**UI and behavior** - Global navigation and Maqady brand. - Featured
-movie hero. - Now Showing and Coming Soon sections; show release dates
-where available. - Search supporting movies, cast, and cinemas if the
-data source supports it. - Genre chips/links. - Our Cinemas section. -
-Movie cards link to the corresponding movie details. - Loading, Empty,
-and Error states; responsive layout.
-
-**Acceptance criteria** - Users can open a movie details page from a
-visible card. - Users can navigate to the movie listing. - Empty data
-produces a clear message, not a blank section. - The page works at
-mobile, tablet, and desktop widths.
+The complete Home page requirements, behavior, data rules, accessibility
+guidance, acceptance criteria, and unresolved decisions are maintained
+in the dedicated [Home page specification](./home/spec.md).
 
 ### FR-02 --- Movies Listing, Search and Filters (`/movies`)
 
-**UI and behavior** - Display movie cards/posters. - Search by movie
-name; global search may also support cast/cinemas if supported by the
-API. - Filter by genre and release date; actor filter only when actor
-data is available. - Sort by rating or release date when those fields
-are available. - Pagination or Load More. - Clear Filters. - Combine
-multiple filters.
+**Purpose and access**
 
-**Acceptance criteria** - Results reflect the selected search and
-filters. - Multiple filters can be active together. - Empty results show
-an Empty State. - Users can navigate from a card to movie details. -
-Loading and Error states are handled.
+- Provide a public, responsive catalog for movies currently showing and
+  upcoming releases. Guests can browse without signing in.
+- Keep the listing at `/movies`; movie cards navigate to the matching
+  `/movies/[movieId]` detail route.
+
+**Page structure and behavior**
+
+- Show a prominent **Movies** heading and separate **Now showing** and
+  **Coming soon** result sets. The reference presents these as tabs with
+  per-status counts; use the counts returned by the catalog, not
+  hard-coded values.
+- The reference labels the default ordering **Newest releases first**.
+  Support release-date sorting when the field and API ordering are
+  available. Support rating sorting only when a trusted rating source
+  and API ordering are available. Do not show rating-sort controls or
+  rating badges based on sample/reference values.
+- Provide title search. Search by cast/actor only when cast data and
+  search support are confirmed; the field label and placeholder must
+  accurately describe supported search.
+- Provide a **Filters** control and accessible panel for genre,
+  showtime date (Any day, Today, Tomorrow, This weekend), and cast.
+  The approved listing design uses showtime date rather than a
+  movie-release-date filter. Populate cast choices from available
+  actor data; do not use prototype names or sample data.
+- Support combining supported filters. The reference shows a count on
+  the Filters control when criteria are active, active-filter chips in
+  the results area, a **Clear all** action, and a **Show N movies**
+  action. Keep filter state and the result count consistent with the
+  applied criteria.
+- Render a responsive grid of movie cards, each linking to its matching
+  movie detail page. Show the poster or a designed fallback, title,
+  available genres, runtime, age rating, and the appropriate release
+  or in-cinemas date. Show a **New** badge only when the catalog
+  supplies an explicit new-release designation or an agreed rule.
+  Ratings may appear only when supplied by an agreed, trusted source.
+- Provide **Load more** or pagination according to the confirmed API.
+  Show how many results are displayed versus the total when available;
+  indicate when there are no more results. Appended pages must not
+  duplicate movies.
+- Use the current Maqady branding and application theme. The supplied
+  Movies prototype is a layout/interaction reference, not a source of
+  production movie data or a reason to change the product brand.
+
+**Search and filter state**
+
+- Search, status, sort, and filters must combine predictably and each
+  change must update the results. Clear all removes the active
+  optional criteria without silently changing the selected release
+  status.
+- **Today** and **Tomorrow** are based on the cinema-local date
+  returned by the movie showtime service. **This weekend** means
+  upcoming Friday and Saturday showtimes. A cast selection matches
+  movies whose credits identify the selected person with the actor role.
+- Show date, cast, genre, search, and status selections are URL-backed;
+  validate query values and restore the corresponding selection/results
+  after refresh and browser Back/Forward.
+- Whether controls update results immediately or after a dialog
+  confirmation, and whether state is persisted in URL parameters, must
+  follow the approved interaction/API contract. If state is URL-backed,
+  refresh and browser Back/Forward must restore the corresponding
+  results; query values must be validated before use.
+
+**Loading, empty, and error behavior**
+
+- Show a layout-matched loading state while results are requested or
+  more results are loading.
+- Distinguish an empty catalog from a search/filter combination with no
+  matches. Offer a clear way to remove active criteria when no matches
+  remain.
+- Present status-specific empty results clearly; do not make an empty
+  Coming soon list look like a failed request or vice versa.
+- Show recoverable request errors and a retry action; do not replace
+  failed requests with an empty success-shaped result.
+- Hide unavailable optional filters and metadata rather than rendering
+  fabricated values or nonfunctional controls.
+
+**Accessibility and responsive behavior**
+
+- Use semantic tabs or equivalent accessible status controls, a
+  labelled search field, and an accessible filter dialog/panel with
+  keyboard-operable controls, visible focus, and clear selected states.
+- Preserve focus when opening/closing filters and announce result-count
+  changes without making every result update disruptive.
+- Ensure poster alt text is meaningful, decorative images are hidden
+  from assistive technology, and status/rating information is not
+  conveyed by color alone.
+- Reflow the grid and filter UI for mobile, tablet, and desktop without
+  horizontal page overflow.
+
+**Acceptance criteria**
+
+- A guest can switch between Now showing and Coming soon and sees
+  results for only the selected status.
+- A non-empty title query returns matching movies; unsupported cast
+  search is not advertised.
+- Every available filter and sort choice affects the returned results.
+  Multiple active criteria are applied together, and Clear all removes
+  active optional criteria.
+- Showtime-date results use the selected movie's cinema-local
+  showtime dates; cast results use the movie's actor credits.
+- Result counts and Load more/pagination state match the data returned
+  by the API; loading another page adds no duplicate movies.
+- Each movie card opens the matching details route and shows only
+  metadata actually available for that movie.
+- Empty catalog, no matches, initial loading, load-more loading,
+  request failure, and retry are handled. Invalid query parameters are
+  handled if query-string state is part of the approved route contract.
+- If search and filter state is URL-backed, refresh and browser
+  Back/Forward restore the matching view.
+
+The page-specific implementation plan and prototype mapping are in
+[`movies/spec.md`](./movies/spec.md) and
+[`movies/plan.md`](./movies/plan.md). API-dependent behavior remains
+subject to the decisions in the page plan.
 
 ### FR-03 --- Movie Details (`/movies/[movieId]`)
 
-**UI and behavior** - Poster and cover image. - Title and description. -
-Genre, duration, release date. - Age rating and review/rating
-information if available. - Cast and director/crew when available. -
-Showtimes. - UI reference also includes Videos, Photos, Details, and
-More Like This sections where content exists. - Book Tickets action.
+**Purpose and access**
 
-**Acceptance criteria** - The page displays data for the requested movie
-only. - If no showtimes are available, explain this clearly. - Book
-Tickets leads to a valid theater/showtime selection. - Handle loading,
-errors, and unknown movie IDs. - Optional sections gracefully handle
-missing content.
+- Let guests view information for one movie and discover a valid
+  theater/showtime before entering seat selection.
+- Resolve the route parameter to one movie. Never substitute another
+  movie when the requested ID is invalid or unavailable.
+- Keep the page at `/movies/[movieId]`; the movie listing links to this
+  route.
+
+**Page content and behavior**
+
+- Use the shared customer navigation and footer, plus a breadcrumb back
+  to Movies and, when supported, the movie's genre/listing context.
+- Show available hero artwork, title, synopsis, genres, runtime,
+  release date/status, age rating, language/subtitles, and a trusted
+  rating/review summary only when supplied by an agreed source.
+- Show available director, writers, producer, and cast/crew credits.
+  Identify cast roles/characters when supplied. Do not render missing
+  credits as placeholders or link names to routes that do not exist.
+- Provide the movie's available showtimes on the detail page. Let users
+  choose a date, a cinema, and then a showtime. Showtime data must be for
+  the current movie and selected date/cinema. Display cinema, local
+  start/end time, hall, availability, and all supplied seat-zone prices
+  with their currency, formatted from minor units, only when the service
+  supplies them.
+- Past, sold-out, and unavailable showtimes must not be selectable.
+  Selecting a date or cinema clears a previously selected showtime if it
+  no longer belongs to that selection. A seat-selection action stays
+  disabled until a valid showtime is selected and then leads to that
+  show's seat-selection route.
+- Provide a Book Tickets action that takes the user to the showtime
+  section; it must not imply a booking has been made. Optional cinema
+  count, next-show, and starting-price summaries must be derived from
+  current service data or omitted.
+- Show Videos, Photos, Details, and More Like This sections only when
+  the relevant data exists. Media controls must reflect actual media
+  capabilities. Recommendations must exclude the current movie and
+  must use valid movie routes.
+
+**Loading, empty, and error behavior**
+
+- Handle movie loading, request failure with retry, and an unknown
+  movie ID distinctly. A failed request must not appear as a not-found
+  result.
+- Load showtimes independently from movie details. Show loading,
+  recoverable error/retry, no showtimes for the selected date/cinema,
+  and no upcoming showtimes for the movie as distinct states.
+- If optional artwork, credits, ratings, media, or recommendations are
+  unavailable, omit that content or use the shared image fallback. Do
+  not invent values or show empty section shells.
+
+**Accessibility and responsive behavior**
+
+- Use one page-level heading, semantic breadcrumb navigation, labelled
+  date and cinema controls, and keyboard-operable showtime and media
+  controls with visible focus and clear selected/disabled states.
+- Do not communicate showtime availability by color alone. Provide
+  meaningful image alternatives and accessible names for media
+  controls; manage focus when opening and closing any media viewer.
+- Reflow the hero, media, credits, and showtime selector for mobile,
+  tablet, and desktop without horizontal page overflow.
+
+**Acceptance criteria**
+
+- The displayed title, metadata, media, and showtimes all belong to the
+  requested movie.
+- Guests can browse the page without signing in.
+- Selecting a date and cinema shows only matching future showtimes.
+- Past, sold-out, and unavailable showtimes cannot be selected.
+- The seat-selection action is unavailable until a valid showtime is
+  selected and then opens the route for that exact showtime.
+- Missing showtimes and optional content, loading, recoverable failures,
+  and unknown movie IDs each produce the correct distinct state.
+- The page remains usable by keyboard and at mobile, tablet, and desktop
+  widths.
+
+The detailed page structure, screenshot interpretation, unresolved
+decisions, and implementation sequence are maintained in the
+[Movie Details specification](./movie-details/spec.md) and
+[implementation plan](./movie-details/plan.md).
 
 ### FR-04 --- Theaters and Showtimes (`/theaters`, `/theaters/[theaterId]`)
 
@@ -176,11 +342,24 @@ validation and email/password errors. - Show/hide password. - Session
 expiry handling. - Protected routes. - UI reference uses Sign In/Create
 Account tabs and suggests preserving a seat hold during sign-in.
 
+**Confirmed authentication endpoints** - `POST /auth/registrations` accepts
+`fullName`, `email`, and `password`; `POST /auth/sessions` accepts `email` and
+`password`. Both return access and refresh tokens with expiry timestamps and
+a customer record. The frontend proxies these requests through same-origin
+Route Handlers and stores tokens in HttpOnly cookies. Token refresh and
+protected-route endpoint behavior remain to be confirmed.
+Local sign-out clears the HttpOnly cookies; backend token revocation is not
+assumed without an endpoint contract. Successful sign-in or registration
+displays a toast and returns to the initiating same-origin page when
+available, otherwise the home page; reject external, auth, and API routes as
+return destinations.
+
 **Acceptance criteria** - Invalid forms are not submitted. - Validation
 messages appear near relevant fields. - Protected routes require a valid
-session. - Session expiry is handled clearly. - Any seat hold across
-authentication must be server-backed and governed by a defined expiry
-policy.
+session. - Session expiry is handled clearly. - Successful sign-in and
+registration show confirmation toasts during redirection. - Any seat hold
+across authentication must be server-backed and governed by a defined
+expiry policy.
 
 ### FR-10 --- My Bookings and Booking Details (`/my-bookings`, `/my-bookings/[bookingId]`)
 
@@ -203,10 +382,20 @@ fields. - Change password if supported. - Logout. - UI reference shows
 Saved Cards; this must use provider-managed tokens/references and must
 never store full card numbers or CVC in the application.
 
-**Acceptance criteria** - Inputs are validated before submission. -
-Success and error feedback is clear. - Server controls editable fields
-and authorization. - Saved payment methods, if implemented, use a secure
-provider integration.
+**Confirmed API contract** - `GET /me` returns the authenticated customer's
+ID, name, email, phone, verification state, and member-since timestamp.
+The profile page uses the server-held access token and displays these
+values without sample-data fallbacks. Profile updates, password changes,
+and saved cards remain unavailable until their API contracts are provided.
+Sign out clears the local access and refresh cookies; remote token revocation
+is unavailable until a backend logout contract is provided.
+
+**Acceptance criteria** - The signed-in navigation links directly to
+`/profile`; signed-out users retain a Sign in link. - Sign out clears local
+auth cookies, redirects home, and shows confirmation. - Inputs are validated
+before submission. - Success and error feedback is clear. - Server controls
+editable fields and authorization. - Saved payment methods, if implemented,
+use a secure provider integration.
 
 ### FR-12 --- Admin Overview (`/admin`)
 
@@ -386,9 +575,10 @@ the backend implementation.
 - Update Profile
 - Admin CRUD and operational queries for supported entities
 
-Exact endpoint names, HTTP methods, request/response schemas,
-authentication strategy, and error format are not specified by the PRD
-and must not be silently assumed.
+API contracts beyond the confirmed authentication and profile-read endpoints
+above, including authentication error details, refresh/logout, profile updates,
+password changes, saved cards, and protected-route behavior, remain to be
+confirmed and must not be silently assumed.
 
 ## 11. Non-Functional Requirements
 

@@ -13,7 +13,7 @@
   - Run `npm run dev` and verify the app starts.
   - **Done when:** the app runs locally without startup errors.
 - [ ] **T02 --- Add project specification files**
-  - Place `spec.md`, `plan.md`, and `task.md` at the project root.
+  - Place `spec.md`, `plan.md`, and `task.md` in the `ai/` directory.
   - Review open questions and record decisions as they are resolved.
   - **Done when:** all three documents are present and reflect the
     agreed MVP.
@@ -70,32 +70,37 @@
   - Add Loading/Empty/Error states.
   - **Done when:** listing data renders and cards open the correct
     movie.
-- [ ] **T11 --- Implement Search and Filters**
+- [x] **T11 --- Implement Search and Filters**
   - Search by movie title.
-  - Filter by genre and release date; actor filter if actor data
+  - Filter by genre and showtime date; filter by cast when actor data
     exists.
   - Sort by rating or release date when supported.
   - Combine filters and implement Clear Filters.
   - **Done when:** results reflect filters and empty results are
     handled.
 - [ ] **T12 --- Implement Movie Details (`/movies/[movieId]`)**
-  - Poster/cover, title, description, genre, duration, release date.
-  - Age rating, rating, cast/director when available.
-  - Showtimes, Videos, Photos, Details, and More Like This where
-    content exists.
-  - Book Tickets action and no-showtime/not-found states.
-  - **Done when:** correct movie data appears and the booking action
-    leads to valid showtime selection.
+  - Match the reference hierarchy: movie hero/media gallery, synopsis
+    and booking summary, showtimes, Cast & Crew, Videos, Photos,
+    Details, and More Like This when supported by data.
+  - Keep date/cinema/showtime selection scoped to the requested movie;
+    block unavailable showtimes and hand off the exact selected
+    showtime to seat selection.
+  - Handle loading, request failure, unknown movie, no showtimes, and
+    optional media/data states distinctly.
+  - Follow the [Movie Details spec](./movie-details/spec.md) and
+    [implementation plan](./movie-details/plan.md).
+  - **Done when:** all page acceptance criteria pass and valid movie
+    data and showtimes lead to the correct seat-selection route.
 
 ## Phase 2 --- Theaters, Showtimes, and Seats
 
-- [ ] **T13 --- Implement Theater Listing (`/theaters`)**
+- [x] **T13 --- Implement Theater Listing (`/theaters`)**
   - Theater cards with image and available
     location/contact/hours/features.
   - Handle unavailable optional data and map-provider failures.
   - **Done when:** theater cards link to the correct theater detail
     page.
-- [ ] **T14 --- Implement Theater Details (`/theaters/[theaterId]`)**
+- [x] **T14 --- Implement Theater Details (`/theaters/[theaterId]`)**
   - Theater profile, halls, showtimes at the theater, and photos
     where available.
   - **Done when:** theater content and showtimes are scoped to the
@@ -139,11 +144,14 @@
 
 ## Phase 3 --- Authentication and User Account
 
-- [ ] **T20 --- Implement Register and Login**
+- [x] **T20 --- Implement Register and Login**
   - Forms, field validation, email/password errors, and show/hide
     password.
   - Support Sign In/Create Account presentation from the UI
     reference.
+  - Connect the documented authentication endpoints through same-origin
+    routes, store session tokens in HttpOnly cookies, and return to the
+    originating same-origin page after success.
   - **Done when:** valid/invalid submissions and errors are handled.
 - [ ] **T21 --- Implement Logout, Session Expiry, and Protected
       Routes**

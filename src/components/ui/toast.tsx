@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { CircleCheck, CircleX, Info } from "lucide-react";
 
 type ToastProps = {
   title?: string;
@@ -10,10 +11,10 @@ type ToastProps = {
   onDismiss: () => void;
 };
 
-const variantClasses = {
-  success: "border-success/50",
-  error: "border-destructive/60",
-  info: "border-info/50",
+const variantIcons = {
+  success: { Icon: CircleCheck, className: "text-emerald-400" },
+  error: { Icon: CircleX, className: "text-[#FF5500]" },
+  info: { Icon: Info, className: "text-[#FF5500]" },
 };
 
 export function Toast({
@@ -30,21 +31,24 @@ export function Toast({
     return () => window.clearTimeout(timeout);
   }, [durationMs, onDismiss]);
 
+  const { Icon, className: iconClassName } = variantIcons[variant];
+
   return (
     <div
       role={variant === "error" ? "alert" : "status"}
       aria-live={variant === "error" ? "assertive" : "polite"}
-      className={`flex items-start gap-4 rounded-lg border bg-surface-elevated p-4 shadow-xl ${variantClasses[variant]}`}
+      className="flex items-start gap-3 border border-white/10 bg-[#1A1A1A] p-4 text-white shadow-xl"
     >
+      <Icon aria-hidden="true" className={`mt-0.5 size-5 shrink-0 ${iconClassName}`} />
       <div className="min-w-0 flex-1">
         {title && <p className="font-semibold">{title}</p>}
-        <p className="text-sm leading-6 text-muted-foreground">{message}</p>
+        <p className="text-sm leading-6 text-white/70">{message}</p>
       </div>
       <button
         type="button"
         onClick={onDismiss}
         aria-label="Dismiss notification"
-        className="rounded-md p-1 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        className="rounded-md p-1 text-white/50 transition hover:bg-white/10 hover:text-white"
       >
         <span aria-hidden="true" className="text-lg leading-none">
           ×

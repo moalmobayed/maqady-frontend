@@ -53,6 +53,22 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+.featured-hero-video {
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw;
+  min-width: 177.78vh;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+.font-cinema-display {
+  font-family: Impact, "Arial Narrow", "Liberation Sans Narrow",
+    var(--font-geist-sans), sans-serif;
+  font-stretch: condensed;
+}
+
 ::selection {
   background-color: var(--primary);
   color: var(--primary-foreground);
@@ -66,4 +82,38 @@ body {
 .ui-dialog::backdrop {
   background: rgb(0 0 0 / 72%);
   backdrop-filter: blur(4px);
+}
+
+.showtime-ticker-viewport {
+  overflow: hidden;
+}
+
+.showtime-ticker-track {
+  width: max-content;
+  animation: showtime-ticker-scroll 36s linear infinite;
+}
+
+.showtime-ticker-viewport:hover .showtime-ticker-track,
+.showtime-ticker-viewport:focus-within .showtime-ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes showtime-ticker-scroll {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showtime-ticker-viewport {
+    overflow-x: auto;
+  }
+
+  .showtime-ticker-track {
+    animation: none;
+  }
 }
